@@ -1,0 +1,191 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Smart Door - Settings</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 24px;
+      background: #f7f9fc;
+    }
+
+    h2 {
+      margin-bottom: 12px;
+    }
+
+    .card {
+      max-width: 720px;
+      background: white;
+      border-radius: 14px;
+      padding: 24px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+    }
+
+    .row {
+      margin-bottom: 18px;
+    }
+
+    label {
+      font-weight: bold;
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    input[type="number"] {
+      padding: 8px;
+      width: 120px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 15px;
+    }
+
+    .hint {
+      font-size: 13px;
+      color: #666;
+      margin-top: 4px;
+    }
+
+    .checkbox-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .checkbox-row input {
+      transform: scale(1.2);
+    }
+
+    .actions {
+      margin-top: 20px;
+      display: flex;
+      gap: 12px;
+    }
+
+    button {
+      padding: 10px 16px;
+      border-radius: 10px;
+      border: none;
+      cursor: pointer;
+      font-size: 14px;
+      background: #4f46e5;
+      color: white;
+    }
+
+    button.secondary {
+      background: #e5e7eb;
+      color: #111;
+    }
+
+    .danger {
+      background: #dc2626;
+    }
+
+    .danger-secondary {
+      background: #b91c1c;
+    }
+
+    .divider {
+      margin: 26px 0;
+      border: none;
+      border-top: 1px solid #eee;
+    }
+
+    .section-title {
+      font-size: 18px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .danger-box {
+      border: 1px solid #fecaca;
+      background: #fff7f7;
+      padding: 18px;
+      border-radius: 14px;
+    }
+  </style>
+</head>
+
+<body>
+
+<h2>Settings</h2>
+
+<div class="card">
+
+  <form method="post">
+
+    <div class="row">
+      <label>Recognition threshold</label>
+      <input type="number" name="threshold" value="{{ threshold }}" step="1">
+      <div class="hint">
+        Lower usually accepts more matches. Tune based on your tests.
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="row checkbox-row">
+      <input type="checkbox" name="email_enabled" {% if email_enabled %}checked{% endif %}>
+      <label style="margin:0;">Enable email notifications</label>
+    </div>
+
+    <div class="row checkbox-row">
+      <input type="checkbox" name="email_on_granted" {% if email_on_granted %}checked{% endif %}>
+      <label style="margin:0;">Send email also on Access Granted</label>
+    </div>
+
+    <div class="row checkbox-row">
+      <input type="checkbox" name="attach_photo" {% if attach_photo %}checked{% endif %}>
+      <label style="margin:0;">Attach photo to emails</label>
+    </div>
+
+    <div class="row">
+      <label>Email cooldown (seconds)</label>
+      <input type="number" name="email_cooldown_sec" value="{{ email_cooldown_sec }}">
+      <div class="hint">
+        0 means no cooldown. Example: 30 sends max 1 email per 30 seconds.
+      </div>
+    </div>
+
+    <div class="actions">
+      <button type="submit">Save</button>
+      <a href="/" style="text-decoration:none;">
+        <button type="button" class="secondary">Back</button>
+      </a>
+    </div>
+
+    <hr class="divider">
+
+    <div class="danger-box">
+      <div class="section-title" style="color:#991b1b;">Danger zone</div>
+      <div class="hint" style="margin-bottom: 14px;">
+        These actions permanently delete data.
+      </div>
+
+      <div class="actions">
+        <button class="danger"
+                type="submit"
+                formaction="/reset_model"
+                formmethod="post"
+                onclick="return confirm('Reset model? This will delete all trained faces.');">
+          Reset model
+        </button>
+
+        <button class="danger-secondary"
+                type="submit"
+                formaction="/clear_events"
+                formmethod="post"
+                onclick="return confirm('Clear all events? This will delete the event history.');">
+          Clear events
+        </button>
+      </div>
+    </div>
+
+  </form>
+
+</div>
+
+</body>
+</html>

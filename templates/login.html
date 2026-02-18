@@ -1,0 +1,146 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Smart Door - Login</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background: #f7f9fc;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .card {
+      background: white;
+      padding: 30px;
+      width: 420px;
+      border-radius: 16px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+      text-align: center;
+    }
+
+    h2 {
+      margin-bottom: 6px;
+    }
+
+    h3 {
+      margin-top: 0;
+      font-weight: normal;
+      color: #555;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+      font-size: 15px;
+      margin-top: 8px;
+    }
+
+    button {
+      margin-top: 14px;
+      padding: 10px 14px;
+      border-radius: 10px;
+      border: none;
+      cursor: pointer;
+      background: #4f46e5;
+      color: white;
+      font-size: 14px;
+      width: 100%;
+    }
+
+    .secondary {
+      background: #e5e7eb;
+      color: #111;
+    }
+
+    .danger {
+      background: #dc2626;
+    }
+
+    .muted {
+      color: #777;
+      font-size: 13px;
+      margin-top: 10px;
+    }
+
+    .flash {
+      background: #eef2ff;
+      border: 1px solid #c7d2fe;
+      color: #3730a3;
+      padding: 10px;
+      border-radius: 10px;
+      margin-bottom: 14px;
+      font-size: 14px;
+    }
+
+    .current {
+      margin-top: 12px;
+      font-size: 14px;
+      color: #333;
+      background: #f3f4f6;
+      padding: 10px;
+      border-radius: 10px;
+    }
+
+    .divider {
+      margin: 18px 0;
+      border: none;
+      border-top: 1px solid #eee;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="card">
+
+  <h2>Smart Door</h2>
+  <h3>Email Notifications</h3>
+
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      <div class="flash">
+        {% for m in messages %}
+          <div>{{ m }}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
+  <form method="post">
+    <input type="email"
+           name="email"
+           placeholder="ellenmavrogianni@gmail.com"
+           value="{{ current_email }}"
+           required>
+    <button type="submit">Save email</button>
+  </form>
+
+  <div class="muted">
+    This email will receive Access Denied alerts and optionally Access Granted events.
+  </div>
+
+  {% if current_email %}
+    <div class="current">
+      Current email:<br>
+      <strong>{{ current_email }}</strong>
+    </div>
+
+    <hr class="divider">
+
+    <form method="post" action="/logout">
+      <button class="danger">Logout and remove email</button>
+    </form>
+  {% endif %}
+
+</div>
+
+</body>
+</html>

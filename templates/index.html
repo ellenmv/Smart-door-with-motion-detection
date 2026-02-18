@@ -1,0 +1,357 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Smart Door</title>
+
+<style>
+:root{
+  --bg:#f7f8fc;
+  --card:#ffffff;
+  --text:#0f172a;
+  --muted:#6b7280;
+  --line:#e5e7eb;
+
+  --primary:#2563eb;
+  --primary-soft:#eff6ff;
+
+  --ok:#16a34a;
+  --ok-bg:#dcfce7;
+
+  --bad:#dc2626;
+  --bad-bg:#fee2e2;
+
+  --wait:#64748b;
+  --wait-bg:#f1f5f9;
+
+  --radius:22px;
+  --shadow:0 20px 45px rgba(15,23,42,.08);
+}
+
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  background:linear-gradient(180deg,#f7f8fc,#eef2ff);
+  color:var(--text);
+  padding:36px;
+}
+
+h2,h3{margin:0}
+
+.topbar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:34px;
+}
+
+.title h2{
+  font-size:28px;
+  font-weight:900;
+  letter-spacing:.4px;
+}
+
+.actions a{
+  margin-left:10px;
+}
+
+.btn{
+  border:0;
+  cursor:pointer;
+  border-radius:16px;
+  padding:10px 18px;
+  font-weight:700;
+  font-size:14px;
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  text-decoration:none;
+  transition:all .15s ease;
+}
+
+.btn.primary{
+  background:var(--primary);
+  color:white;
+  box-shadow:0 8px 18px rgba(37,99,235,.25);
+}
+.btn.primary:hover{transform:translateY(-1px)}
+
+.btn.secondary{
+  background:#eef2ff;
+  color:#1e293b;
+}
+
+.layout{
+  display:grid;
+  grid-template-columns:440px 1fr;
+  gap:26px;
+}
+
+.card{
+  background:var(--card);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+  padding:26px;
+}
+
+.card h3{
+  font-size:14px;
+  font-weight:800;
+  color:#334155;
+  margin-bottom:16px;
+  letter-spacing:.6px;
+  text-transform:uppercase;
+}
+
+.section{
+  margin-top:26px;
+  padding-top:26px;
+  border-top:1px solid var(--line);
+}
+
+.badge{
+  display:inline-flex;
+  align-items:center;
+  padding:8px 18px;
+  border-radius:999px;
+  font-weight:900;
+  font-size:13px;
+  letter-spacing:.6px;
+}
+
+.ok{background:var(--ok-bg);color:var(--ok)}
+.bad{background:var(--bad-bg);color:var(--bad)}
+.wait{background:var(--wait-bg);color:var(--wait)}
+
+.kv{
+  display:grid;
+  grid-template-columns:120px 1fr;
+  gap:14px 18px;
+  margin-top:22px;
+}
+
+.k{
+  font-size:12px;
+  color:var(--muted);
+  font-weight:700;
+  letter-spacing:.4px;
+}
+
+.v{
+  font-size:15px;
+  font-weight:800;
+}
+
+input{
+  width:100%;
+  padding:12px 14px;
+  border-radius:14px;
+  border:1px solid var(--line);
+  font-size:14px;
+  margin-top:10px;
+}
+
+input:focus{
+  outline:none;
+  border-color:#93c5fd;
+  box-shadow:0 0 0 4px rgba(59,130,246,.15);
+}
+
+.people{
+  display:grid;
+  gap:12px;
+}
+
+.person{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:12px 16px;
+  border-radius:16px;
+  background:#f9fafb;
+  border:1px solid var(--line);
+}
+
+.person b{
+  font-size:14px;
+}
+
+table{
+  width:100%;
+  border-collapse:collapse;
+}
+
+thead th{
+  font-size:12px;
+  color:var(--muted);
+  text-align:left;
+  padding:12px;
+  border-bottom:1px solid var(--line);
+  letter-spacing:.4px;
+}
+
+tbody td{
+  padding:14px 12px;
+  font-size:13px;
+  border-bottom:1px solid #f1f5f9;
+}
+
+tbody tr:hover{
+  background:#f8fafc;
+}
+
+.pill{
+  display:inline-flex;
+  padding:6px 14px;
+  border-radius:999px;
+  font-weight:900;
+  font-size:12px;
+  letter-spacing:.4px;
+}
+
+.pill.ok{background:var(--ok-bg);color:var(--ok)}
+.pill.bad{background:var(--bad-bg);color:var(--bad)}
+.pill.wait{background:var(--wait-bg);color:var(--wait)}
+</style>
+</head>
+
+<body>
+
+<div class="topbar">
+  <div class="title">
+    <h2>Smart Door</h2>
+  </div>
+  <div class="actions">
+    <a class="btn secondary" href="/login">Email</a>
+    <a class="btn secondary" href="/settings">Settings</a>
+  </div>
+</div>
+
+<div class="layout">
+
+<!-- LEFT -->
+<div class="card">
+  <h3>Status</h3>
+
+  <span id="status_badge" class="badge wait">{{ status.last_result }}</span>
+
+  <div class="kv">
+    <div class="k">NAME</div>
+    <div class="v" id="last_name">{{ status.last_name or "-" }}</div>
+
+    <div class="k">CONFIDENCE</div>
+    <div class="v" id="last_confidence">{{ status.last_confidence or "-" }}</div>
+
+    <div class="k">NOTE</div>
+    <div class="v" id="last_note">{{ status.note or "-" }}</div>
+  </div>
+
+  <div class="section">
+    <form action="/trigger" method="post">
+      <button class="btn primary" type="submit">Run Recognition</button>
+    </form>
+  </div>
+
+  <div class="section">
+    <h3>Add / Train Person</h3>
+
+    <form action="/capture" method="post">
+      <input name="person" placeholder="Person name" required>
+      <input type="number" name="num" value="20" min="5" max="60">
+      <button class="btn primary" type="submit" style="margin-top:14px">
+        Capture Samples
+      </button>
+    </form>
+
+    <form action="/train" method="post" style="margin-top:14px">
+      <button class="btn secondary" type="submit">Train Model</button>
+    </form>
+  </div>
+
+  <div class="section">
+    <h3>Authorized Persons</h3>
+    <div class="people">
+      {% for p in persons %}
+      <div class="person">
+        <b>{{ p }}</b>
+        <form action="/delete_person" method="post">
+          <input type="hidden" name="person" value="{{ p }}">
+          <button class="btn secondary" type="submit">Delete</button>
+        </form>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<!-- RIGHT -->
+<div class="card">
+  <h3>Recent Events</h3>
+
+  <table>
+    <thead>
+      <tr>
+        <th>TIME</th>
+        <th>NAME</th>
+        <th>RESULT</th>
+        <th>CONF</th>
+      </tr>
+    </thead>
+    <tbody id="events-body">
+      {% for e in events %}
+      <tr>
+        <td>{{ e.ts }}</td>
+        <td>{{ e.name }}</td>
+        <td>
+          <span class="pill {% if e.result=='GRANTED' %}ok{% elif e.result=='DENIED' %}bad{% else %}wait{% endif %}">
+            {{ e.result }}
+          </span>
+        </td>
+        <td>{{ e.confidence }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+</div>
+
+<script>
+function poll(){
+  fetch("/status_json")
+    .then(r=>r.json())
+    .then(data=>{
+      const s=data.status;
+      const badge=document.getElementById("status_badge");
+
+      badge.textContent=s.last_result;
+      badge.className="badge "+
+        (s.last_result==="GRANTED"?"ok":
+         s.last_result==="DENIED"?"bad":"wait");
+
+      document.getElementById("last_name").textContent=s.last_name||"-";
+      document.getElementById("last_confidence").textContent=s.last_confidence||"-";
+      document.getElementById("last_note").textContent=s.note||"-";
+
+      const tbody=document.getElementById("events-body");
+      tbody.innerHTML="";
+      data.events.forEach(e=>{
+        const row=document.createElement("tr");
+        row.innerHTML=`
+          <td>${e.ts}</td>
+          <td>${e.name||"-"}</td>
+          <td><span class="pill ${e.result==="GRANTED"?"ok":e.result==="DENIED"?"bad":"wait"}">${e.result}</span></td>
+          <td>${e.confidence||"-"}</td>
+        `;
+        tbody.appendChild(row);
+      });
+    });
+}
+
+setInterval(poll,2000);
+</script>
+
+</body>
+</html>
