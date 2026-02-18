@@ -17,13 +17,14 @@ class Config:
     PIR_GPIO_PIN: int = 17
 
     EMAIL_ENABLED_DEFAULT: bool =  True
-    EMAIL_TO: str = "ellenmavrogianni@gmail.com"
-    EMAIL_FROM: str = "ellenmavrogianni@gmail.com"
+    EMAIL_TO: str = "youremail@gmail.com"
+    EMAIL_FROM: str = "youremail@gmail.com"
     SMTP_HOST: str = "smtp.gmail.com"
     SMTP_PORT: int = 587
-    SMTP_USERNAME: str = "ellenmavrogianni@gmail.com"
-    SMTP_PASSWORD: str = "xvevnjwegrguftzr"
+    SMTP_USERNAME: str = "youremail@gmail.com"
+    SMTP_PASSWORD: str = "your_app_password"
 
     DEFAULT_THRESHOLD: float = 60.0
 
 CONFIG = Config()
+
